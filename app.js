@@ -24,6 +24,43 @@ var bot = new builder.UniversalBot(connector, [
     }
 ]);
 
+
+// Add dialog that runs only first time user visits
+bot.dialog('firstTime', function(session){
+    session.userData.firstRun = true;
+    // session.send("Hello...").endDialog();
+    session.beginDialog('/welcome');
+}).triggerAction({
+    onFindAction: function (context, callback) {
+        // Only trigger if we've never seen user before
+        if (!context.userData.firstRun) {
+            // Return a score of 1.1 to ensure the first run dialog wins
+            callback(null, 1.1);
+        } else {
+            callback(null, 0.0);
+        }
+    }
+});
+
+// Add dialog to return welcome msg
+bot.dialog('/welcome', function(session){
+    var card = new builder.AnimationCard(session)
+        .title('Welcome to GROUP BUY ^_^')
+        .subtitle('Lets start the adventure')
+        .image(builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/bot-framework/media/how-it-works/architecture-resize.png'))
+        .media([
+            { url: 'https://media.giphy.com/media/2SoAk7x02i9aw/giphy.gif' }
+        ]);
+
+    // attach the card to the reply message
+    var msg = new builder.Message(session).addAttachment(card);
+    session.send(msg).endDialog();
+});
+
+
+
+
+
 // Add dialog to return list of shirts available
 bot.dialog('showShirts', function (session) {
     var msg = new builder.Message(session);
@@ -73,22 +110,10 @@ bot.dialog('salesData', [
             var region = salesData[results.response.entity];
             session.send("We sold %(units)d units for a total of %(total)s.", region).endDialog(); 
         } else {
-            session.send("ok");
+            session.send("ok").endDialog();
         }
     }
 ]).triggerAction({matches: /^(sales)/i});
 
-bot.dialog('gif', function(session){
-    var card = new builder.AnimationCard(session)
-        .title('Microsoft Bot Framework')
-        .subtitle('Animation Card')
-        .image(builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/bot-framework/media/how-it-works/architecture-resize.png'))
-        .media([
-            { url: 'https://media.giphy.com/media/2SoAk7x02i9aw/giphy.gif' }
-        ]);
 
-    // attach the card to the reply message
-    var msg = new builder.Message(session).addAttachment(card);
-    session.send(msg);
-}).triggerAction({matches: /^(gif)/i});
 
