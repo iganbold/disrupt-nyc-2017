@@ -336,7 +336,7 @@ bot.dialog('/cart', [
         ]); 
 
         var msg = new builder.Message(session).addAttachment(card);
-        session.send(msg).endDialog();
+        session.send(msg);
 
         builder.Prompts.choice(session, "Would like to pay?", "Pay"); 
     }, function(session, results) {
