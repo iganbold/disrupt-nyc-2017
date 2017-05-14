@@ -78,3 +78,17 @@ bot.dialog('salesData', [
     }
 ]).triggerAction({matches: /^(sales)/i});
 
+bot.dialog('gif', function(session){
+    var card = new builder.AnimationCard(session)
+        .title('Microsoft Bot Framework')
+        .subtitle('Animation Card')
+        .image(builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/bot-framework/media/how-it-works/architecture-resize.png'))
+        .media([
+            { url: 'https://media.giphy.com/media/2SoAk7x02i9aw/giphy.gif' }
+        ]);
+
+    // attach the card to the reply message
+    var msg = new builder.Message(session).addAttachment(card);
+    session.send(msg);
+}).triggerAction({matches: /^(gif)/i});
+
