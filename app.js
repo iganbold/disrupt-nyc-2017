@@ -82,11 +82,11 @@ bot.dialog('/getstarted', [
 
 //*************************************************
 // RESET secion
-//  bot.use(builder.Middleware.dialogVersion({
-//             version: 1.0,
-//             message: 'Conversation restarted by a main update',
-//             resetCommand: /^reset/i
-//         }));
+ bot.use(builder.Middleware.dialogVersion({
+    version: 1.0,
+    message: 'Conversation restarted by a main update',
+    resetCommand: /^reset/i
+}));
 
 
 // Add dialog that runs only first time user visits
@@ -172,10 +172,10 @@ bot.dialog('/top10', [
             snapshot.forEach(function(childSanpShot){
                 attachments.push(
                     new builder.HeroCard(session)
-                    .title("12$ - "+childSanpShot.val().name)
-                    .subtitle("Store Price: 25$, Sold: 2500")
-                    .text(",Min:150")
-                    .images([builder.CardImage.create(session, 'http://petersapparel.parseapp.com/img/whiteshirt.png')])
+                    .title(childSanpShot.val().price+"- "+childSanpShot.val().description)
+                    .subtitle("Store Price: "+childSanpShot.val().storePrice+", Sold: "+childSanpShot.val().quantitySold)
+                    .text(",Min: "+ childSanpShot.val().minimumQuantity)
+                    .images([builder.CardImage.create(session, childSanpShot.val().url)])
                     .buttons([
                         builder.CardAction.imBack(session, "buy classic white t-shirt", "Buy")
                     ])
