@@ -227,7 +227,7 @@ bot.dialog('/categories', [
 
         session.send(msg).endDialog();  
     }
-]).triggerAction({ matches: /^(categories|category)/i });
+]).triggerAction({ matches: /^(categories|category|Back to Categories)/i });
 
 
 bot.dialog('/selectCategory', [
@@ -292,12 +292,53 @@ bot.dialog('add', [
     function(session, results) {
         if (results.response) {
             // var region = salesData[results.response.entity];
-            session.send(""+results.response.entity).endDialog(); 
+            // session.send(""+results.response.entity).endDialog(); 
+            switch(results.response.entity) {
+                case 'Back to Categories':
+                    session.beginDialog('/categories');
+                    break;
+                case 'Shopping Cart':
+                    // session.beginDialog(results.response.entity);
+                    session.beginDialog('/cart');
+                    break;
+                default:
+
+            }
+            
         } else {
             // session.send("ok").endDialog();
         }    
     }
 ]).triggerAction({matches: /^(Add:)/i});
+
+var order = 1234;
+
+bot.dialog('/cart', [
+    function(session,args, next) { 
+        var card = new builder.ReceiptCard(session)
+            .title('Itgel Ganbold')
+            .facts([
+                builder.Fact.create(session, order++, 'Order Number')
+            ])
+            .items([
+                builder.ReceiptItem.create(session, '$ 38.45', 'Data Transfer')
+                    .quantity(368)
+                    .image(builder.CardImage.create(session, 'https://github.com/amido/azure-vector-icons/raw/master/renders/traffic-manager.png')),
+                builder.ReceiptItem.create(session, '$ 45.00', 'App Service')
+                    .quantity(720)
+                    .image(builder.CardImage.create(session, 'https://github.com/amido/azure-vector-icons/raw/master/renders/cloud-service.png'))
+            ])
+            .tax('$ 7.50')
+            .total('$ 90.95')
+            .buttons([
+                builder.CardAction.openUrl(session, 'https://azure.microsoft.com/en-us/pricing/', 'More Information')
+                    .image('https://raw.githubusercontent.com/amido/azure-vector-icons/master/renders/microsoft-azure.png')
+        ]); 
+
+        var msg = new builder.Message(session).addAttachment(card);
+        session.send(msg).endDialog();
+    }    
+]);
 
 
 
