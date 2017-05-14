@@ -24,6 +24,12 @@ var bot = new builder.UniversalBot(connector, [
     }
 ]);
 
+ bot.use(builder.Middleware.dialogVersion({
+            version: 1.0,
+            message: 'Conversation restarted by a main update',
+            resetCommand: /^reset/i
+        }));
+
 bot.dialog('/delete', (session) => {
 delete session.userData
 session.endDialog('Everything has been wiped out')
