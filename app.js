@@ -337,7 +337,49 @@ bot.dialog('/cart', [
 
         var msg = new builder.Message(session).addAttachment(card);
         session.send(msg).endDialog();
-    }    
+
+        builder.Prompts.choice(session, "Would like to pay?", "Pay"); 
+    }, function(session, results) {
+        if (results.response) {
+            switch(results.response.entity) {
+                case 'Pay':
+                    session.beginDialog('/pay');
+                    break;
+                default:
+            }
+            
+        } else {
+            session.send("ok").endDialog();
+        }    
+    } 
+]);
+
+bot.dialog('/pay', [
+    function(session,args, next) { 
+        var card = new builder.ReceiptCard(session)
+            .title('Itgel Ganbold')
+            .facts([
+                builder.Fact.create(session, order++, 'Order Number'),
+                builder.Fact.create(session, 'VISA 5555-****', 'Payment Method')
+            ])
+            .items([
+                builder.ReceiptItem.create(session, '$ 276.23', 'iRobot Roomba 650')
+                    .quantity(1)
+                    .image(builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/564x/4a/51/c5/4a51c539f4a1b2da296dc203bfe654e2.jpg')),
+                builder.ReceiptItem.create(session, '$ 40.99', 'DeLonghi Espresso Maker')
+                    .quantity(1)
+                    .image(builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/564x/35/09/7d/35097de5ffe7c73d38c511b9683daf3a.jpg'))
+            ])
+            .tax('$ 31.21')
+            .total('$ 398.39')
+            .buttons([
+                builder.CardAction.openUrl(session, 'https://azure.microsoft.com/en-us/pricing/', 'More Information')
+                    .image('https://raw.githubusercontent.com/amido/azure-vector-icons/master/renders/microsoft-azure.png')
+        ]); 
+
+        var msg = new builder.Message(session).addAttachment(card);
+        session.send(msg).endDialog();
+    }
 ]);
 
 
