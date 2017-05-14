@@ -35,6 +35,7 @@ server.post('/api/messages', connector.listen());
 // Receive messages from the user and respond by echoing each message back (prefixed with 'You said:')
 var bot = new builder.UniversalBot(connector, [
     function(session, results) {
+
         session.beginDialog('/getstarted');
     },
     function (session, results) {
@@ -68,6 +69,17 @@ var bot = new builder.UniversalBot(connector, [
 
 bot.dialog('/getstarted', [
     function (session) {
+        session.userData.firstRun = true;
+        var card = new builder.AnimationCard(session)
+            .title('Welcome to GROUP BUY ^_^')
+            .image(builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/bot-framework/media/how-it-works/architecture-resize.png'))
+            .media([
+                { url: 'https://media.giphy.com/media/2SoAk7x02i9aw/giphy.gif' }
+            ]);
+
+        // attach the card to the reply message
+        var msg = new builder.Message(session).addAttachment(card);
+        session.send(msg);
         builder.Prompts.choice(session, "Let's start the adventure?", ["Start","Tutorial"]); 
     },
     function (session, results) {
