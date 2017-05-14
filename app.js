@@ -24,6 +24,15 @@ var bot = new builder.UniversalBot(connector, [
     }
 ]);
 
+bot.dialog('/delete', (session) => {
+delete session.userData
+session.endDialog('Everything has been wiped out')
+
+})
+.triggerAction({
+matches: /delete all/i,
+confirmPrompt: "This will wipe everything out. Are you sure?"
+});
 
 // Add dialog that runs only first time user visits
 // bot.dialog('firstTime', function(session){
