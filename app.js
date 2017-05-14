@@ -109,7 +109,7 @@ bot.dialog('/start',[
             new builder.HeroCard(session)
                 .title("Top 10 Featured Products")
                 .subtitle("subtitle")
-                .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/originals/f6/d1/79/f6d1794ad4eb3001e973e1707de9a9c7.png')])
+                .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/564x/23/74/94/237494a0f452ef2b4ac60bd74f7da347.jpg')])
                 .buttons([
                     builder.CardAction.imBack(session, "SELECT_TOPS", "Select")
                 ]),
