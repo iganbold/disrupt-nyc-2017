@@ -28,8 +28,17 @@ var bot = new builder.UniversalBot(connector, [
 // Add dialog that runs only first time user visits
 bot.dialog('firstTime', function(session){
     session.userData.firstRun = true;
-    // session.send("Hello...").endDialog();
-    session.beginDialog('/welcome');
+    var card = new builder.AnimationCard(session)
+        .title('Welcome to GROUP BUY ^_^')
+        .subtitle('Lets start the adventure')
+        .image(builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/bot-framework/media/how-it-works/architecture-resize.png'))
+        .media([
+            { url: 'https://media.giphy.com/media/2SoAk7x02i9aw/giphy.gif' }
+        ]);
+
+    // attach the card to the reply message
+    var msg = new builder.Message(session).addAttachment(card);
+    session.send(msg).endDialog();
 }).triggerAction({
     onFindAction: function (context, callback) {
         // Only trigger if we've never seen user before
@@ -43,19 +52,19 @@ bot.dialog('firstTime', function(session){
 });
 
 // Add dialog to return welcome msg
-bot.dialog('/welcome', function(session){
-    var card = new builder.AnimationCard(session)
-        .title('Welcome to GROUP BUY ^_^')
-        .subtitle('Lets start the adventure')
-        .image(builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/bot-framework/media/how-it-works/architecture-resize.png'))
-        .media([
-            { url: 'https://media.giphy.com/media/2SoAk7x02i9aw/giphy.gif' }
-        ]);
+// bot.dialog('/welcome', function(session){
+//     var card = new builder.AnimationCard(session)
+//         .title('Welcome to GROUP BUY ^_^')
+//         .subtitle('Lets start the adventure')
+//         .image(builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/bot-framework/media/how-it-works/architecture-resize.png'))
+//         .media([
+//             { url: 'https://media.giphy.com/media/2SoAk7x02i9aw/giphy.gif' }
+//         ]);
 
-    // attach the card to the reply message
-    var msg = new builder.Message(session).addAttachment(card);
-    session.send(msg).endDialog();
-});
+//     // attach the card to the reply message
+//     var msg = new builder.Message(session).addAttachment(card);
+//     session.send(msg).endDialog();
+// });
 
 
 
