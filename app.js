@@ -142,7 +142,7 @@ bot.dialog('/selectStart', [
                 session.beginDialog('/top10');
                 break;
             case 'SELECT_START_CATEGORIS':
-                session.send("CATEGORIES").endDialog();
+                session.beginDialog('/categories');
                 break;
             default:
                 session.send(utterance).endDialog();
@@ -168,7 +168,7 @@ bot.dialog('/top10', [
                     new builder.HeroCard(session)
                     .title("12$ - "+childSanpShot.val().name)
                     .subtitle("Store Price: 25$, Sold: 2500")
-                    .text("Min:150")
+                    .text(",Min:150")
                     .images([builder.CardImage.create(session, 'http://petersapparel.parseapp.com/img/whiteshirt.png')])
                     .buttons([
                         builder.CardAction.imBack(session, "buy classic white t-shirt", "Buy")
@@ -179,6 +179,47 @@ bot.dialog('/top10', [
             msg.attachments(attachments);
             session.send(msg).endDialog();
         });
+    }
+]);
+
+bot.dialog('/categories', [
+    function(session) {
+        var msg = new builder.Message(session);
+        msg.attachmentLayout(builder.AttachmentLayout.carousel)
+        msg.attachments([
+            new builder.HeroCard(session)
+                .title("Home")
+                .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/564x/86/24/27/8624270b74466f4545a388d7712f806e.jpg')])
+                .buttons([
+                    builder.CardAction.imBack(session, "buy classic white t-shirt", "Select")
+                ]),
+            new builder.HeroCard(session)
+                .title("Family")
+                .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/564x/57/42/bc/5742bc118a9ca1b43621b21b662bd54e.jpg')])
+                .buttons([
+                    builder.CardAction.imBack(session, "buy classic gray t-shirt", "Select")
+                ]),
+            new builder.HeroCard(session)
+                .title("Electronics")
+                .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/564x/bd/2f/51/bd2f513dbc4e65376c6a4724e0d910df.jpg')])
+                .buttons([
+                    builder.CardAction.imBack(session, "buy classic white t-shirt", "Select")
+                ]),
+            new builder.HeroCard(session)
+                .title("Entertainment")
+                .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/originals/b3/9b/a0/b39ba0ef57b3416c0ec6a44c90905041.png')])
+                .buttons([
+                    builder.CardAction.imBack(session, "buy classic gray t-shirt", "Select")
+                ]),
+            new builder.HeroCard(session)
+                .title("Clothing & Accessories")
+                .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/564x/b4/4f/a6/b44fa63c526b827e8c50a9e590f38321.jpg')])
+                .buttons([
+                    builder.CardAction.imBack(session, "buy classic white t-shirt", "Select")
+                ])
+        ]);  
+
+        session.send(msg).endDialog();  
     }
 ]);
 
