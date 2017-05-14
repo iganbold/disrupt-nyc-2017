@@ -166,9 +166,9 @@ bot.dialog('/top10', [
             snapshot.forEach(function(childSanpShot){
                 attachments.push(
                     new builder.HeroCard(session)
-                    .title(childSanpShot.val().name)
-                    .subtitle("100% Soft and Luxurious Cotton")
-                    .text("Price is $25 and carried in sizes (S, M, L, and XL)")
+                    .title("12$ - "+childSanpShot.val().name)
+                    .subtitle("Store Price: 25$, Sold: 2500")
+                    .text("Min:150")
                     .images([builder.CardImage.create(session, 'http://petersapparel.parseapp.com/img/whiteshirt.png')])
                     .buttons([
                         builder.CardAction.imBack(session, "buy classic white t-shirt", "Buy")
