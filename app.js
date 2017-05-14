@@ -10,6 +10,12 @@ admin.initializeApp({
 
 var db = admin.database();
 var refTop10 = db.ref("/Top10");
+var refHome = db.ref("/Category/Home");
+// var refTop10 = db.ref("/Top10");
+// var refTop10 = db.ref("/Top10");
+// var refTop10 = db.ref("/Top10");
+
+
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -224,7 +230,56 @@ bot.dialog('/categories', [
 ]).triggerAction({ matches: /^(categories|category)/i });
 
 
+bot.dialog('/selectCategory', [
+    function(session, args, next) {
+        var utterance = args.intent.matched[0];
+        switch(utterance) {
+            case 'Select Home Category':
+                // session.send("HOME").endDialog();
+                // session.beginDialog('/homeCategory');
+                var msg = new builder.Message(session);
+                msg.attachmentLayout(builder.AttachmentLayout.carousel);
+                let attachments = [];
+                refHome.once("value", function(snapshot) {
+                    snapshot.forEach(function(childSanpShot){
+                        attachments.push(
+                            new builder.HeroCard(session)
+                            .title(childSanpShot.val().price+", "+childSanpShot.val().description)
+                            .subtitle("Store Price: "+childSanpShot.val().storePrice+", Willing to Buy: "+childSanpShot.val().quantitySold)
+                            .text(""+childSanpShot.val().minimumQuantity)
+                            .images([builder.CardImage.create(session, childSanpShot.val().url)])
+                            .buttons([
+                                builder.CardAction.imBack(session, "Add:"+childSanpShot.key, "Add")
+                            ])
+                        );
+                    });
 
+                    msg.attachments(attachments);
+                    session.send(msg).endDialog();
+                });
+
+                break;
+            case 'Select Family Category':
+                session.send("Family").endDialog();
+                // session.beginDialog('/categories');
+                break;
+            case 'Select Electronics Category':
+                session.send("Electronics").endDialog();
+                // session.beginDialog('/categories');
+                break;
+            case 'Select Entertainment Category':
+                session.send("Entertainment").endDialog();
+                // session.beginDialog('/categories');
+                break;
+            case 'Select Clothing & Accessories Category':
+                session.send("Clothing & Accessories").endDialog();
+                // session.beginDialog('/categories');
+                break;
+            default:
+                session.send(utterance).endDialog();
+        }
+    }
+]).triggerAction({ matches: /(Select Home Category|Select Family Category|Select Electronics Category|Select Entertainment Category|Select Clothing & Accessories Category)/i });
 
 
 
