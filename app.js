@@ -49,18 +49,6 @@ bot.dialog('showShirts', function (session) {
     session.send(msg).endDialog();
 }).triggerAction({ matches: /^(show|list)/i });
 
-
-// bot.dialog('colors', function(session) {
-//     var msg = new builder.Message(session)
-//             .text("Thank you for expressing interest in our premium golf shirt! What color of shirt would you like?")
-//             .suggestedActions([
-//                 builder.CardAction.imBack(session, "productId=1&color=green", "Green"),
-//                 builder.CardAction.imBack(session, "productId=1&color=blue", "Blue"),
-//                 builder.CardAction.imBack(session, "productId=1&color=red", "Red")
-//             ]);
-//     session.send(msg).endDialog();
-// }).triggerAction({ matches: /^(colors|color)/i });
-
 var salesData = {
     "west": {
         units: 200,
@@ -83,7 +71,7 @@ bot.dialog('salesData', [
     function (session, results) {
         if (results.response) {
             var region = salesData[results.response.entity];
-            session.send("We sold %(units)d units for a total of %(total)s.", region); 
+            session.send("We sold %(units)d units for a total of %(total)s.", region).endDialog(); 
         } else {
             session.send("ok");
         }
