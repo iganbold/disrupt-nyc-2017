@@ -191,37 +191,40 @@ bot.dialog('/categories', [
                 .title("Home")
                 .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/564x/86/24/27/8624270b74466f4545a388d7712f806e.jpg')])
                 .buttons([
-                    builder.CardAction.imBack(session, "buy classic white t-shirt", "Select")
+                    builder.CardAction.imBack(session, "Select Home Category", "Select")
                 ]),
             new builder.HeroCard(session)
                 .title("Family")
                 .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/564x/57/42/bc/5742bc118a9ca1b43621b21b662bd54e.jpg')])
                 .buttons([
-                    builder.CardAction.imBack(session, "buy classic gray t-shirt", "Select")
+                    builder.CardAction.imBack(session, "Select Family Category", "Select")
                 ]),
             new builder.HeroCard(session)
                 .title("Electronics")
                 .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/564x/bd/2f/51/bd2f513dbc4e65376c6a4724e0d910df.jpg')])
                 .buttons([
-                    builder.CardAction.imBack(session, "buy classic white t-shirt", "Select")
+                    builder.CardAction.imBack(session, "Select Electronics Category", "Select")
                 ]),
             new builder.HeroCard(session)
                 .title("Entertainment")
                 .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/originals/b3/9b/a0/b39ba0ef57b3416c0ec6a44c90905041.png')])
                 .buttons([
-                    builder.CardAction.imBack(session, "buy classic gray t-shirt", "Select")
+                    builder.CardAction.imBack(session, "Select Entertainment Category", "Select")
                 ]),
             new builder.HeroCard(session)
                 .title("Clothing & Accessories")
                 .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/564x/b4/4f/a6/b44fa63c526b827e8c50a9e590f38321.jpg')])
                 .buttons([
-                    builder.CardAction.imBack(session, "buy classic white t-shirt", "Select")
+                    builder.CardAction.imBack(session, "Select Clothing & Accessories Category", "Select")
                 ])
         ]);  
 
         session.send(msg).endDialog();  
     }
-]);
+]).triggerAction({ matches: /^(categories|category)/i });
+
+
+
 
 
 
