@@ -20,22 +20,28 @@ server.post('/api/messages', connector.listen());
 // Receive messages from the user and respond by echoing each message back (prefixed with 'You said:')
 var bot = new builder.UniversalBot(connector, [
     function(session, results) {
-        session.send("You said: %s", session.message.text).endDialog();
+        session.beginDialog('/getstarted');
+    },
+    function (session, results) {
+        var region = startData[results.response.entity];
+        session.send('result %(action)s:', region);
     }
 ]);
 
+//*************************************************
+// RESET secion
 //  bot.use(builder.Middleware.dialogVersion({
 //             version: 1.0,
 //             message: 'Conversation restarted by a main update',
 //             resetCommand: /^reset/i
 //         }));
 
+
 // Add dialog that runs only first time user visits
 bot.dialog('firstTime', function(session){
     session.userData.firstRun = true;
     var card = new builder.AnimationCard(session)
         .title('Welcome to GROUP BUY ^_^')
-        .subtitle('Lets start the adventure')
         .image(builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/bot-framework/media/how-it-works/architecture-resize.png'))
         .media([
             { url: 'https://media.giphy.com/media/2SoAk7x02i9aw/giphy.gif' }
@@ -56,20 +62,37 @@ bot.dialog('firstTime', function(session){
     }
 });
 
-// Add dialog to return welcome msg
-// bot.dialog('/welcome', function(session){
-//     var card = new builder.AnimationCard(session)
-//         .title('Welcome to GROUP BUY ^_^')
-//         .subtitle('Lets start the adventure')
-//         .image(builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/bot-framework/media/how-it-works/architecture-resize.png'))
-//         .media([
-//             { url: 'https://media.giphy.com/media/2SoAk7x02i9aw/giphy.gif' }
-//         ]);
+//*************************************************
+// Get Started Section
+var startData = {
+    "Start": {
+        action: "start"
+    },
+    "Tutorial": {
+        action: "tutorial"
+    },
+};
 
-//     // attach the card to the reply message
-//     var msg = new builder.Message(session).addAttachment(card);
-//     session.send(msg).endDialog();
-// });
+bot.dialog('/getstarted', [
+    function (session) {
+        builder.Prompts.choice(session, "Let's start the adventure?", startData); 
+    },
+    function (session, results) {
+        if (results.response) {
+            session.endDialogWithResult(results);
+        } else {
+            session.beginDialog('/getstarted');
+            // session.send("ok").endDialog();
+        }
+    }
+]);
+
+
+
+
+
+
+
 
 
 
