@@ -1,6 +1,15 @@
 var restify = require('restify');
 var builder = require('botbuilder');
+var admin = require("firebase-admin");
+var serviceAccount = require("./fb.json");
 
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+  databaseURL: "https://plug-14dba.firebaseio.com"
+});
+
+var db = admin.database();
+var refTop10 = db.ref("/Top10");
 
 // Setup Restify Server
 var server = restify.createServer();
@@ -101,6 +110,7 @@ bot.dialog('firstTime', function(session){
 
 
 //*************************************************
+// Add dialog that start the flow
 bot.dialog('/start',[
     function(session) {
         var msg = new builder.Message(session);
@@ -108,27 +118,69 @@ bot.dialog('/start',[
         msg.attachments([
             new builder.HeroCard(session)
                 .title("Top 10 Featured Products")
-                .subtitle("subtitle")
                 .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/564x/23/74/94/237494a0f452ef2b4ac60bd74f7da347.jpg')])
                 .buttons([
-                    builder.CardAction.imBack(session, "SELECT_TOPS", "Select")
+                    builder.CardAction.imBack(session, "SELECT_START_TOPS", "Select")
                 ]),
             new builder.HeroCard(session)
                 .title("Categories")
-                .subtitle("subtitle")
-                .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/originals/2c/23/56/2c235626cd393a5bef5bd865ce297d9e.png')])
+                .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/564x/b4/d7/8c/b4d78c5a79fa5fcc63ce50c7a745cb9a.jpg')])
                 .buttons([
-                    builder.CardAction.imBack(session, "SELECT_CATEGORIS","Select")
+                    builder.CardAction.imBack(session, "SELECT_START_CATEGORIS","Select")
                 ])
         ]);
         session.send(msg).endDialog();
     }
 ]);
 
+bot.dialog('/selectStart', [
+    function(session, args, next) {
+        var utterance = args.intent.matched[0];
+        switch(utterance) {
+            case 'SELECT_START_TOPS':
+                // session.send("TOP").endDialog();
+                session.beginDialog('/top10');
+                break;
+            case 'SELECT_START_CATEGORIS':
+                session.send("CATEGORIES").endDialog();
+                break;
+            default:
+                session.send(utterance).endDialog();
+        }
+    }
+]).triggerAction({ matches: /(SELECT_START_TOPS|SELECT_START_CATEGORIS)/i });
 
 
+//*************************************************
+// bot.dialog('/top10', [
+//     function.
+// ]);
 
 
+bot.dialog('/top10', [
+    function(session) {
+        var msg = new builder.Message(session);
+        msg.attachmentLayout(builder.AttachmentLayout.carousel);
+        var attachments = [];
+        refTop10.once("value", function(snapshot) {
+            snapshot.forEach(function(childSanpShot){
+                attachments.push(
+                    new builder.HeroCard(session)
+                    .title(childSanpShot.val().name)
+                    .subtitle("100% Soft and Luxurious Cotton")
+                    .text("Price is $25 and carried in sizes (S, M, L, and XL)")
+                    .images([builder.CardImage.create(session, 'http://petersapparel.parseapp.com/img/whiteshirt.png')])
+                    .buttons([
+                        builder.CardAction.imBack(session, "buy classic white t-shirt", "Buy")
+                    ])
+                );
+            });
+
+            msg.attachments(attachments);
+            session.send(msg).endDialog();
+        });
+    }
+]);
 
 
 
