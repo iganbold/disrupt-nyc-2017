@@ -49,74 +49,52 @@ bot.dialog('showShirts', function (session) {
     session.send(msg).endDialog();
 }).triggerAction({ matches: /^(show|list)/i });
 
-bot.dialog('adaptivecards', function (session){
-    var msg = new builder.Message(session)
-    .addAttachment({
-        contentType: "application/vnd.microsoft.card.adaptive",
-        content: {
-            type: "AdaptiveCard",
-            speak: "<s>Your  meeting about \"Adaptive Card design session\"<break strength='weak'/> is starting at 12:30pm</s><s>Do you want to snooze <break strength='weak'/> or do you want to send a late notification to the attendees?</s>",
-               body: [
-                    {
-                        "type": "TextBlock",
-                        "text": "Adaptive Card design session",
-                        "size": "large",
-                        "weight": "bolder"
-                    },
-                    {
-                        "type": "TextBlock",
-                        "text": "Conf Room 112/3377 (10)"
-                    },
-                    {
-                        "type": "TextBlock",
-                        "text": "12:30 PM - 1:30 PM"
-                    },
-                    {
-                        "type": "TextBlock",
-                        "text": "Snooze for"
-                    },
-                    {
-                        "type": "Input.ChoiceSet",
-                        "id": "snooze",
-                        "style":"compact",
-                        "choices": [
-                            {
-                                "title": "5 minutes",
-                                "value": "5",
-                                "isSelected": true
-                            },
-                            {
-                                "title": "15 minutes",
-                                "value": "15"
-                            },
-                            {
-                                "title": "30 minutes",
-                                "value": "30"
-                            }
-                        ]
-                    }
-                ],
-                "actions": [
-                    {
-                        "type": "Action.Http",
-                        "method": "POST",
-                        "url": "http://foo.com",
-                        "title": "Snooze"
-                    },
-                    {
-                        "type": "Action.Http",
-                        "method": "POST",
-                        "url": "http://foo.com",
-                        "title": "I'll be late"
-                    },
-                    {
-                        "type": "Action.Http",
-                        "method": "POST",
-                        "url": "http://foo.com",
-                        "title": "Dismiss"
-                    }
-                ]
+
+// bot.dialog('colors', function(session) {
+//     var msg = new builder.Message(session)
+//             .text("Thank you for expressing interest in our premium golf shirt! What color of shirt would you like?")
+//             .suggestedActions([
+//                 builder.CardAction.imBack(session, "productId=1&color=green", "Green"),
+//                 builder.CardAction.imBack(session, "productId=1&color=blue", "Blue"),
+//                 builder.CardAction.imBack(session, "productId=1&color=red", "Red")
+//             ]);
+//     session.send(msg).endDialog();
+// }).triggerAction({ matches: /^(colors|color)/i });
+
+var salesData = {
+    "west": {
+        units: 200,
+        total: "$6,000"
+    },
+    "central": {
+        units: 100,
+        total: "$3,000"
+    },
+    "east": {
+        units: 300,
+        total: "$9,000"
+    }
+};
+
+bot.dialog('salesData', [
+    function (session) {
+        builder.Prompts.choice(session, "Which region would you like sales for?", salesData); 
+    },
+    function (session, results) {
+        if (results.response) {
+            var region = salesData[results.response.entity];
+            session.send("We sold %(units)d units for a total of %(total)s.", region); 
+            var msg = new builder.Message(session)
+                .text("Thank you for expressing interest in our premium golf shirt! What color of shirt would you like?")
+                .suggestedActions([
+                    builder.CardAction.imBack(session, "productId=1&color=green", "Green"),
+                    builder.CardAction.imBack(session, "productId=1&color=blue", "Blue"),
+                    builder.CardAction.imBack(session, "productId=1&color=red", "Red")
+                ]);
+            session.send(msg);
+        } else {
+            session.send("ok");
         }
-    });
-    session.send(msg).endDialog();
-}).triggerAction({ matches: /^(adaptive|adapt)/i });
+    }
+]).triggerAction({matches: /^(sales)/i});
+
