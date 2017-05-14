@@ -23,8 +23,45 @@ var bot = new builder.UniversalBot(connector, [
         session.beginDialog('/getstarted');
     },
     function (session, results) {
-        var region = startData[results.response.entity];
-        session.send('result %(action)s:', region);
+        // var region = startData[results.response.entity];
+        switch(results.response.entity) {
+            case 'Start':
+                session.beginDialog('/start');
+                break;
+            case 'Tutorial':
+
+                break;
+            default:
+
+        }
+        // session.send('result '+results.response.entity);
+    }
+]);
+
+
+
+//*************************************************
+// Get Started Section
+// var startData = {
+//     "Start": {
+//         action: "start"
+//     },
+//     "Tutorial": {
+//         action: "tutorial"
+//     },
+// };
+
+bot.dialog('/getstarted', [
+    function (session) {
+        builder.Prompts.choice(session, "Let's start the adventure?", ["Start","Tutorial"]); 
+    },
+    function (session, results) {
+        if (results.response) {
+            session.endDialogWithResult(results);
+        } else {
+            session.beginDialog('/getstarted');
+            // session.send("ok").endDialog();
+        }
     }
 ]);
 
@@ -62,32 +99,31 @@ bot.dialog('firstTime', function(session){
     }
 });
 
-//*************************************************
-// Get Started Section
-var startData = {
-    "Start": {
-        action: "start"
-    },
-    "Tutorial": {
-        action: "tutorial"
-    },
-};
 
-bot.dialog('/getstarted', [
-    function (session) {
-        builder.Prompts.choice(session, "Let's start the adventure?", startData); 
-    },
-    function (session, results) {
-        if (results.response) {
-            session.endDialogWithResult(results);
-        } else {
-            session.beginDialog('/getstarted');
-            // session.send("ok").endDialog();
-        }
+//*************************************************
+bot.dialog('/start',[
+    function(session) {
+        var msg = new builder.Message(session);
+        msg.attachmentLayout(builder.AttachmentLayout.carousel)
+        msg.attachments([
+            new builder.HeroCard(session)
+                .title("Top 10 Featured Products")
+                .subtitle("subtitle")
+                .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/originals/f6/d1/79/f6d1794ad4eb3001e973e1707de9a9c7.png')])
+                .buttons([
+                    builder.CardAction.imBack(session, "SELECT_TOPS", "Select")
+                ]),
+            new builder.HeroCard(session)
+                .title("Categories")
+                .subtitle("subtitle")
+                .images([builder.CardImage.create(session, 'https://s-media-cache-ak0.pinimg.com/originals/2c/23/56/2c235626cd393a5bef5bd865ce297d9e.png')])
+                .buttons([
+                    builder.CardAction.imBack(session, "SELECT_CATEGORIS","Select")
+                ])
+        ]);
+        session.send(msg).endDialog();
     }
 ]);
-
-
 
 
 
