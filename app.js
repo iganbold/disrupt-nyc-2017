@@ -24,47 +24,37 @@ var bot = new builder.UniversalBot(connector, [
     }
 ]);
 
- bot.use(builder.Middleware.dialogVersion({
-            version: 1.0,
-            message: 'Conversation restarted by a main update',
-            resetCommand: /^reset/i
-        }));
-
-bot.dialog('/delete', (session) => {
-delete session.userData
-session.endDialog('Everything has been wiped out')
-
-})
-.triggerAction({
-matches: /delete all/i,
-confirmPrompt: "This will wipe everything out. Are you sure?"
-});
+//  bot.use(builder.Middleware.dialogVersion({
+//             version: 1.0,
+//             message: 'Conversation restarted by a main update',
+//             resetCommand: /^reset/i
+//         }));
 
 // Add dialog that runs only first time user visits
-// bot.dialog('firstTime', function(session){
-//     session.userData.firstRun = true;
-//     var card = new builder.AnimationCard(session)
-//         .title('Welcome to GROUP BUY ^_^')
-//         .subtitle('Lets start the adventure')
-//         .image(builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/bot-framework/media/how-it-works/architecture-resize.png'))
-//         .media([
-//             { url: 'https://media.giphy.com/media/2SoAk7x02i9aw/giphy.gif' }
-//         ]);
+bot.dialog('firstTime', function(session){
+    session.userData.firstRun = true;
+    var card = new builder.AnimationCard(session)
+        .title('Welcome to GROUP BUY ^_^')
+        .subtitle('Lets start the adventure')
+        .image(builder.CardImage.create(session, 'https://docs.microsoft.com/en-us/bot-framework/media/how-it-works/architecture-resize.png'))
+        .media([
+            { url: 'https://media.giphy.com/media/2SoAk7x02i9aw/giphy.gif' }
+        ]);
 
-//     // attach the card to the reply message
-//     var msg = new builder.Message(session).addAttachment(card);
-//     session.send(msg).endDialog();
-// }).triggerAction({
-//     onFindAction: function (context, callback) {
-//         // Only trigger if we've never seen user before
-//         if (!context.userData.firstRun) {
-//             // Return a score of 1.1 to ensure the first run dialog wins
-//             callback(null, 1.1);
-//         } else {
-//             callback(null, 0.0);
-//         }
-//     }
-// });
+    // attach the card to the reply message
+    var msg = new builder.Message(session).addAttachment(card);
+    session.send(msg).endDialog();
+}).triggerAction({
+    onFindAction: function (context, callback) {
+        // Only trigger if we've never seen user before
+        if (!context.userData.firstRun) {
+            // Return a score of 1.1 to ensure the first run dialog wins
+            callback(null, 1.1);
+        } else {
+            callback(null, 0.0);
+        }
+    }
+});
 
 // Add dialog to return welcome msg
 // bot.dialog('/welcome', function(session){
