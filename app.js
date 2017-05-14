@@ -246,7 +246,7 @@ bot.dialog('/selectCategory', [
                             new builder.HeroCard(session)
                             .title(childSanpShot.val().price+", "+childSanpShot.val().description)
                             .subtitle("Store Price: "+childSanpShot.val().storePrice+", Willing to Buy: "+childSanpShot.val().quantitySold)
-                            .text(""+childSanpShot.val().minimumQuantity)
+                            .text("MinQt:"+childSanpShot.val().minimumQuantity)
                             .images([builder.CardImage.create(session, childSanpShot.val().url)])
                             .buttons([
                                 builder.CardAction.imBack(session, "Add:"+childSanpShot.key, "Add")
