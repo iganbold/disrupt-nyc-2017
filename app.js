@@ -84,14 +84,6 @@ bot.dialog('salesData', [
         if (results.response) {
             var region = salesData[results.response.entity];
             session.send("We sold %(units)d units for a total of %(total)s.", region); 
-            var msg = new builder.Message(session)
-                .text("Thank you for expressing interest in our premium golf shirt! What color of shirt would you like?")
-                .suggestedActions([
-                    builder.CardAction.imBack(session, "productId=1&color=green", "Green"),
-                    builder.CardAction.imBack(session, "productId=1&color=blue", "Blue"),
-                    builder.CardAction.imBack(session, "productId=1&color=red", "Red")
-                ]);
-            session.send(msg);
         } else {
             session.send("ok");
         }
