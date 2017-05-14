@@ -284,6 +284,22 @@ bot.dialog('/selectCategory', [
 
 
 
+bot.dialog('add', [
+    function(session,args, next) {
+        var utterance = args.intent.matched[0];
+        builder.Prompts.choice(session, "Added to shopping cart! Would you like to continue or show shopping cart?", "Back to Categories|Shopping Cart"); 
+    },
+    function(session, results) {
+        if (results.response) {
+            // var region = salesData[results.response.entity];
+            session.send(""+results.response.entity).endDialog(); 
+        } else {
+            // session.send("ok").endDialog();
+        }    
+    }
+]).triggerAction({matches: /^(Add:)/i});
+
+
 
 // Add dialog to return list of shirts available
 bot.dialog('showShirts', function (session) {
